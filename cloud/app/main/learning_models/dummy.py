@@ -5,17 +5,13 @@ class Dummy(LearningModelBase):
 
     def __init__(self):
         super().__init__()
-        self.x = 1
-        self.y = 2
+        self.parameters = {'param1': 1, 'param2': "string"}
+        self.outputs = {'output1': 12345, 'output2': {}}
+        self.inputs = {'input1': [], 'input2': 1233}
         self.description = 'This is the bandit model example'
-
-    def model_definition(self) -> dict:
-        return {'inputs': ['aDD', 'bDD'], 'parameters': ['paDD', 'pbDD', 'pcDD'], 'outputs': ['resultDD']}
 
     def run(self, command: str) -> (str, str):
         return "RUN", "success"
 
-
-
-    def as_json(self):
-        return 'JSON DUMP: ' + self.description
+    def model_definition(self) -> dict:
+        return {'inputs': self.get_inputs(), 'outputs': self.get_outputs(), 'parameters': self.get_parameters()}

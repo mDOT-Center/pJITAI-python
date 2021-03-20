@@ -23,6 +23,7 @@ def get_all_available_models():
         module_name = module[:-3]
         cls = getattr(importlib.import_module(base_learning_model_path + str(module_name)), module_name.capitalize())
         q = cls()
-        models[module_name] = q.model_definition()
+        models[module_name] = q.model_definition()  # TODO Decide what to do here with the model definitions
+        models[module_name] = q.as_dict()
 
     return models
