@@ -18,3 +18,14 @@ class LearningTaskDto:
             description='Date and time this object was last updated'
         )
     })
+
+
+class LearningModelDto:
+    api = Namespace('learning_model', description='Learning models available within the system')
+
+    learning_model = api.model('learning_model', {
+        'id': fields.Integer(
+            required=False,
+            description='DB identifier for this learning task'
+        )
+    })
