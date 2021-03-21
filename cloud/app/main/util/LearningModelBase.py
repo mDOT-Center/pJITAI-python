@@ -30,6 +30,5 @@ class LearningModelBase(metaclass=ABCMeta):
     def run(self, command: str) -> (str, str):
         pass
 
-    @abstractmethod
     def model_definition(self) -> dict:
-        pass
+        return {'inputs': self.get_inputs(), 'outputs': self.get_outputs(), 'parameters': self.get_parameters()}

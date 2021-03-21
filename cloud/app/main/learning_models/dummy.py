@@ -13,5 +13,3 @@ class Dummy(LearningModelBase):
     def run(self, command: str) -> (str, str):
         return "RUN", "success"
 
-    def model_definition(self) -> dict:
-        return {'inputs': self.get_inputs(), 'outputs': self.get_outputs(), 'parameters': self.get_parameters()}
