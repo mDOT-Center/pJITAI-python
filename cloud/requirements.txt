@@ -5,7 +5,7 @@ flask-script
 flask-migrate
 flask_testing
 
-sqlalchem==1.3.23 #1.4.0 breaks something right now
+sqlalchemy==1.3.23 #1.4.0 breaks something right now
 
 sentry-sdk[flask]
 blinker
