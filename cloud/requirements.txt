@@ -1,8 +1,8 @@
-flask
+flask==1.1.2
 flask-restx
 flask-SQLAlchemy
 flask-script
-flask-migrate
+flask-migrate==2.7.0
 flask_testing
 
 sqlalchemy==1.3.23 #1.4.0 breaks something right now
