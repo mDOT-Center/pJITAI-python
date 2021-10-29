@@ -1,0 +1,253 @@
+{
+  "name": "Thompson Sampling",
+  "uuid": "d5bf43c5-fddb-46bb-a2cf-9418aefff4a5",
+  "createdOn": "2016-01-19T10:25:00.957Z",
+  "modifiedOn": "2016-01-19T10:25:00.957Z",
+  "createdBy": "admin",
+  "modifiedBy": "user1",
+  "version": "1.0",
+  "metadata": {
+    "description": "This is a description provided by the researcher.",
+    "study_name": "Study Name"
+  },
+  "feature_vector": {
+    "core": [
+      {
+        "name": "posterior_sampling_weight",
+        "description": "Posterior sampling weight",
+        "type": "float",
+        "value": 0.54
+      },
+      {
+        "name": "availability",
+        "description": "Availability of data",
+        "type": "integer",
+        "value": 1
+      },
+      {
+        "name": "last_action_taken",
+        "type": "string_object_id_list",
+        "value": "do_nothing | send_message <-- FROM_DEFINED_ACTIONS"
+      }
+    ],
+    "features": [
+      {
+        "id": 0,
+        "name": "next_30_min_step_count",
+        "description": "Number of steps in the 30 minutes after intervention",
+        "type": "integer",
+        "value": 758
+      },
+      {
+        "id": 1,
+        "name": "prior_30_min_step_count",
+        "description": "Number of steps in the prior 30 minutes to this request",
+        "type": "integer",
+        "value": 345
+      },
+      {
+        "id": 2,
+        "name": "engaged_prior_day",
+        "description": "Was the participant engaging with the system over the past 24 hours (true->1,false-0)",
+        "type": "integer",
+        "value": 1
+      },
+      {
+        "id": 3,
+        "name": "variance_in_prior_30_min_step_count",
+        "description": "Variance of the step count over the past 30 minutes",
+        "type": "float",
+        "value": 3.4562
+      },
+      {
+        "id": 4,
+        "name": "location",
+        "description": "Semantic location of the participant",
+        "type": "string_option_list",
+        "options": [
+          "Home",
+          "Work",
+          "Other"
+        ],
+        "value": "Home"
+      }
+    ]
+  },
+  "treatment_effect_model": {
+    "features": [
+      "prior_30_min_step_count",
+      "location"
+    ],
+    "reward": "next_30_min_step_count"
+  },
+  "defined_actions": [
+    {
+      "id": 0,
+      "name": "do_nothing",
+      "description": "Do nothing"
+    },
+    {
+      "id": 1,
+      "name": "send_message",
+      "description": "Send Message"
+    }
+  ],
+  "parameters": [
+    {
+      "id": 0,
+      "name": "alpha_0_mu",
+      "type": "float_list",
+      "range": [
+        0,
+        1
+      ],
+      "value": [
+        0.45,
+        0.123,
+        0.5,
+        0.99,
+        0.23
+      ]
+    },
+    {
+      "id": 1,
+      "name": "alpha_0_sigma",
+      "type": "float_list",
+      "range": [
+        0,
+        1
+      ],
+      "value": [
+        0.45,
+        0.123,
+        0.5,
+        0.99
+      ]
+    },
+    {
+      "id": 2,
+      "name": "beta_mu",
+      "type": "float_list",
+      "range": [
+        0,
+        1
+      ],
+      "value": [
+        0.45,
+        0.123,
+        0.5,
+        0.99
+      ]
+    },
+    {
+      "id": 3,
+      "name": "beta_sigma",
+      "type": "float_list",
+      "range": [
+        0,
+        1
+      ],
+      "value": [
+        0.45,
+        0.123,
+        0.5,
+        0.99
+      ]
+    },
+    {
+      "id": 4,
+      "name": "alpha_selected_features",
+      "type": "boolean_list",
+      "value": [
+        true,
+        false,
+        true,
+        false
+      ]
+    },
+    {
+      "id": 5,
+      "name": "beta_selected_features",
+      "type": "boolean_list",
+      "value": [
+        true,
+        false,
+        true,
+        false
+      ]
+    },
+    {
+      "id": 6,
+      "name": "noise",
+      "type": "float",
+      "range": [
+        0,
+        "Infinity"
+      ],
+      "value": 1
+    },
+    {
+      "id": 7,
+      "name": "lower_clip",
+      "type": "float",
+      "range": [
+        0,
+        1
+      ],
+      "value": 0.2
+    },
+    {
+      "id": 8,
+      "name": "upper_clip",
+      "type": "float",
+      "range": [
+        0,
+        1
+      ],
+      "value": 0.8
+    },
+    {
+      "id": 9,
+      "name": "update_interval",
+      "type": "integer",
+      "range": [
+        1,
+        "Infinity"
+      ],
+      "value": 5
+    }
+  ],
+  "output_decision_time": {
+    "uuid": "d5bf43c5-fddb-46bb-a2cf-9418aefff4a5",
+    "generation_timestamp": "2016-01-19T10:25:00.957Z",
+    "data": [
+      {
+        "name": "do_nothing",
+        "description": "Do nothing",
+        "probability": 0.3
+      },
+      {
+        "name": "send_message",
+        "description": "Send Message",
+        "probability": 0.7
+      }
+    ]
+  },
+  "output_update_time": {
+    "uuid": "d5bf43c5-fddb-46bb-a2cf-9418aefff4a5",
+    "update_timestamp": "2016-01-19T10:25:00.957Z",
+    "data": [
+      {
+        "name": "posterior_sampling_weights",
+        "type": "float_list",
+        "value": [
+          0.54,
+          0.24,
+          0.65,
+          0.1,
+          0.001
+        ]
+      }
+    ]
+  }
+}
