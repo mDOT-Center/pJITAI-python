@@ -1,0 +1,190 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Add/Edit an RL Algorithm Settings {% endblock title %}
+
+{% block content %}
+
+{% set current_url= url_for(request.endpoint) | replace("/","") %}
+
+{% if current_url=="my_algorithms" %}
+{% set bread_crumb = "My Algorithms" %}
+{% set view_button = "Edit Algorithm" %}
+{% else %}
+{% set bread_crumb = "View Prebuilt" %}
+{% set view_button = "New Instance" %}
+{% endif %}
+
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Algorithm</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="{{ url_for('home_blueprint.index') }}"><i class="fas fa-home"></i></a></li>
+
+                <li class="breadcrumb-item active" aria-current="page">{{bread_crumb}}</li>
+              </ol>
+            </nav>
+          </div>
+          <!--<div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+<div class="container-fluid mt--6">
+
+
+
+
+  <div class="card mb-4">
+    <!-- Card header -->
+    <div class="card-header border-0">
+      <div class="row">
+        <div class="col-6">
+          <h3 class="mb-0">RL Prebuilt Algorithms</h3>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Card body -->
+    <div class="card-body">
+      <!-- Form groups used in grid -->
+      <div class="row">
+        <div class="table-responsive">
+          <table  class="table align-items-center table-flush table-striped">
+            <thead class="thead-light">
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for a in algorithms_definitions %}
+            <tr>
+              <td>
+                {{ a }}
+              </td>
+              <td>
+                {{ algorithms_definitions.get(a).get("description") }}
+              </td>
+              <td class="table-actions">
+                <a href="" class="btn btn-info btn-sm" role="button"><i class="fas fa-user-edit"></i>{{view_button}}</a>
+
+              </td>
+            </tr>
+            {% endfor %}
+
+            </tbody>
+          </table>
+          <div class="accordion" id="accordionExample">
+            {% for a in algorithms_definitions %}
+            <div class="card">
+              <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                <h5 class="mb-0">{{ a }}</h5>
+              </div>
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                  <table   class="table align-items-center table-flush table-striped">
+                    <tbody>
+                    <tr>
+                      <td><strong>Algorithm Name</strong>: {{a}}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Description</strong> {{ algorithms_definitions.get(a).get("description") }}</td>
+                    </tr>
+                    <tr>
+                      <td><h2>Parameters</h2></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {% for p_k, p_v in algorithms_definitions.get(a).get("parameters").items() %}
+                          <p><strong>Name</strong>: {{ p_k }}</p>
+                          {% for k,v in p_v.items() %}
+                            <p><strong>{{k}}</strong> - {{ v }}</p>
+                          {% endfor %}
+                          <hr>
+                        {% endfor %}
+
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <h2>Standalone Parameters</h2>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {% for p_k, p_v in algorithms_definitions.get(a).get("standalone_parameters").items() %}
+                        <p><strong>Name</strong>: {{ p_k }}</p>
+                        {% for k,v in p_v.items() %}
+                        <p><strong>{{k}}</strong> - {{ v }}</p>
+                        {% endfor %}
+                        <hr>
+                        {% endfor %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <h2>Other Parameters</h2>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {% for p_k, p_v in algorithms_definitions.get(a).get("other_parameters").items() %}
+                        <p><strong>Name</strong>: {{ p_k }}</p>
+                        {% for k,v in p_v.items() %}
+                        <p><strong>{{k}}</strong> - {{ v }}</p>
+                        {% endfor %}
+                        <hr>
+                        {% endfor %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <h2>Tuning Scheduler</h2>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        {% for p_k, p_v in algorithms_definitions.get(a).get("tuning_scheduler").items() %}
+                        <p><strong>{{p_k}}</strong> - {{ p_v }}</p>
+                        <hr>
+                        {% endfor %}
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+
+
+
+
+</div>
+
+    {% include "includes/footer.html" %}
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}
