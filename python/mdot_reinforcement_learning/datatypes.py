@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
+
 from python.mdot_reinforcement_learning.util import time_8601
 
 
@@ -39,3 +40,27 @@ class RLPoint:
             "status_code": self.status_code,
             "status_message": self.status_message,
         }
+
+
+@dataclass(frozen=True)
+class RLFeatureVector:
+    values: list[RLPoint]
+    user_id: str
+    timestamp: str = time_8601()
+
+    def as_dict(self):
+        return {
+            "timestamp": self.timestamp,
+            "user_id": self.user_id,
+            "values": [v.as_dict() for v in self.values],
+        }
+
+    @classmethod
+    def from_dict(cls, input_dict):
+        d = RLFeatureVector(
+            timestamp=input_dict["timestamp"],
+            user_id=input_dict["user_id"],
+            values=[RLPoint.from_dict(v) for v in input_dict["values"]],
+        )
+
+        return d

@@ -6,7 +6,7 @@ import responses
 import random
 
 from mdot_reinforcement_learning import reinforcement_learning as mrl
-from python.mdot_reinforcement_learning.datatypes import RLPoint
+from python.mdot_reinforcement_learning.datatypes import RLPoint, RLFeatureVector
 
 
 class TestRLMethods(unittest.TestCase):
@@ -43,31 +43,38 @@ class TestRLMethods(unittest.TestCase):
 
     @responses.activate
     def test_data_validation_clean(self):
-        validate_data_input = []
-        for i in range(2):
-            validate_data_input.append(RLPoint(
+        validate_data_input = RLFeatureVector(
+            timestamp=time_8601(),
+            user_id='user_1',
+            values=[RLPoint(
                 timestamp=time_8601(),
                 value=random.random(),
                 name=f'feature_{i}',
-            ))
+            ) for i in range(2)],
+        )
 
-        validate_data_output = [RLPoint(name=x.name, value=x.value, timestamp=x.timestamp, status_code='SUCCESS',
-                                        status_message='DATA_VALIDATED') for x in validate_data_input]
+        validate_data_output = RLFeatureVector(
+            timestamp=validate_data_input.timestamp,
+            user_id=validate_data_input.user_id,
+            values=[RLPoint(name=x.name, value=x.value, timestamp=x.timestamp, status_code='SUCCESS',
+                            status_message='DATA_VALIDATED') for x in validate_data_input.values]
+        )
 
         server_response = {
-            'timestamp': '2022-05-05T13:47:51.557803-05:00',
+            'timestamp': validate_data_input.timestamp,
+            'user_id': validate_data_input.user_id,
             'values': [
                 {
-                    'name': 'feature_0',
-                    'value': 1.234,
-                    'timestamp': '2022-05-05T13:47:51.557803-05:00',
+                    'name': validate_data_input.values[0].name,
+                    'value': validate_data_input.values[0].value,
+                    'timestamp': validate_data_input.values[0].timestamp,
                     'status_code': 'SUCCESS',
                     'status_message': 'DATA_VALIDATED',
                 },
                 {
-                    'name': 'feature_1',
-                    'value': 86,
-                    'timestamp': '2022-05-05T13:47:51.557803-05:00',
+                    'name': validate_data_input.values[1].name,
+                    'value': validate_data_input.values[1].value,
+                    'timestamp': validate_data_input.values[1].timestamp,
                     'status_code': 'SUCCESS',
                     'status_message': 'DATA_VALIDATED',
                 },
@@ -80,7 +87,6 @@ class TestRLMethods(unittest.TestCase):
                       status=200)
 
         validate_result = self.session.validate_data(validate_data_input)
-        pprint(validate_result)
         self.assertEqual(validate_result, validate_data_output)
 
 
