@@ -1,16 +1,13 @@
 #
 
 import requests
-import uuid
 
-from mdot_reinforcement_learning.util import add_token, url_builder, validate_parameters
+from mdot_reinforcement_learning.util import url_builder, validate_parameters
 
-# Helper functions
 
 # Main class
 
 class reinforcement_learning:
-
     model = {}
     service_url = ''
     service_token = ''
@@ -27,8 +24,7 @@ class reinforcement_learning:
         self.service_url = url_builder(server, service_id)
         self.service_token = service_token
 
-        r = requests.post(self.service_url,
-                          json=add_token({}, self.service_token))
+        r = requests.post(self.service_url, json={})
         r.raise_for_status()  # Raise an exception if the request fails for any reason
         if r.status_code == requests.codes.ok:
             self.model = r.json()  # Save the RL model returned from the server
@@ -52,11 +48,11 @@ class reinforcement_learning:
         """
 
         # Validate the data
-        valid = validate_parameters(self.model, data)
-
+        # valid = validate_parameters(self.model, data)
+        valid = True
         if valid:
             # Send to the server
-            r = requests.post(self.service_url + '/batch_update', headers={'RLToken': self.token}, json={"data": data})
+            r = requests.post(self.service_url + '/batch_upload', headers={'RLToken': self.service_token}, json={"data": data})
             r.raise_for_status()  # Raise an exception if the request fails for any reason
             if r.status_code == requests.codes.ok:
                 result = r.json()
@@ -75,11 +71,11 @@ class reinforcement_learning:
         """
 
         # Validate the data
-        valid = validate_parameters(self.model, data)
-
+        # valid = validate_parameters(self.model, data)
+        valid = True
         if valid:
             # Send to the server
-            r = requests.post(self.service_url + '/decision', headers={'RLToken': self.token},
+            r = requests.post(self.service_url + '/decision', headers={'RLToken': self.service_token},
                               json={"data": data})
             r.raise_for_status()
             if r.status_code == requests.codes.ok:

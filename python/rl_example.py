@@ -60,7 +60,7 @@ except ValidationError as e:
     pass
 
 try:
-    batch_update_result = session.batch_upload(validated_data)  # Server validate before saving data, Returns errors if any and the client raises and exception
+    batch_upload_result = session.batch_upload(validated_data)  # Server validate before saving data, Returns errors if any and the client raises and exception
 except SessionError as se:
     pass
 
