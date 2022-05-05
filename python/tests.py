@@ -1,8 +1,12 @@
 import unittest
-from mdot_reinforcement_learning.util import url_builder
+from pprint import pprint
+
+from mdot_reinforcement_learning.util import url_builder, time_8601
 import responses
+import random
 
 from mdot_reinforcement_learning import reinforcement_learning as mrl
+from python.mdot_reinforcement_learning.datatypes import RLPoint
 
 
 class TestRLMethods(unittest.TestCase):
@@ -38,17 +42,46 @@ class TestRLMethods(unittest.TestCase):
         self.assertEqual(batch_upload_result, {'batch_upload': 'bar'})
 
     @responses.activate
-    def test_decision_data(self):
-        decision_data = {
-            'data': [
-                [1, 2, 3, 4, 5],
+    def test_data_validation_clean(self):
+        validate_data_input = []
+        for i in range(2):
+            validate_data_input.append(RLPoint(
+                timestamp=time_8601(),
+                value=random.random(),
+                name=f'feature_{i}',
+            ))
+
+        validate_data_output = [RLPoint(name=x.name, value=x.value, timestamp=x.timestamp, status_code='SUCCESS',
+                                        status_message='DATA_VALIDATED') for x in validate_data_input]
+
+        server_response = {
+            'timestamp': '2022-05-05T13:47:51.557803-05:00',
+            'values': [
+                {
+                    'name': 'feature_0',
+                    'value': 1.234,
+                    'timestamp': '2022-05-05T13:47:51.557803-05:00',
+                    'status_code': 'SUCCESS',
+                    'status_message': 'DATA_VALIDATED',
+                },
+                {
+                    'name': 'feature_1',
+                    'value': 86,
+                    'timestamp': '2022-05-05T13:47:51.557803-05:00',
+                    'status_code': 'SUCCESS',
+                    'status_message': 'DATA_VALIDATED',
+                },
             ]
         }
 
-        responses.add(responses.POST, url_builder(self.server, self.service_id) + '/decision', json={'decision': 'bar'},
+        responses.add(responses.POST,
+                      url_builder(self.server, self.service_id) + '/validate_data',
+                      json=server_response,
                       status=200)
-        decision_result = self.session.decision(decision_data)
-        self.assertEqual(decision_result, {'decision': 'bar'})
+
+        validate_result = self.session.validate_data(validate_data_input)
+        pprint(validate_result)
+        self.assertEqual(validate_result, validate_data_output)
 
 
 if __name__ == '__main__':

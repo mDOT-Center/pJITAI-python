@@ -1,4 +1,5 @@
 #
+from pprint import pprint
 
 import requests
 
@@ -6,6 +7,9 @@ from mdot_reinforcement_learning.util import url_builder, validate_parameters
 
 
 # Main class
+from python.mdot_reinforcement_learning.datatypes import RLPoint
+from python.mdot_reinforcement_learning.util import time_8601
+
 
 class reinforcement_learning:
     model = {}
@@ -75,7 +79,8 @@ class reinforcement_learning:
         valid = True
         if valid:
             # Send to the server
-            r = requests.post(self.service_url + '/decision', headers={'RLToken': self.service_token},
+            r = requests.post(self.service_url + '/decision',
+                              headers={'RLToken': self.service_token},
                               json={"data": data})
             r.raise_for_status()
             if r.status_code == requests.codes.ok:
@@ -83,3 +88,27 @@ class reinforcement_learning:
                 return result
         else:
             raise Exception("Data is not valid")
+
+    def validate_data(self, data: list) -> list:
+        """
+
+        :param data:
+        :return:
+        """
+        # Convert to JSON for sending to the server
+
+        input_data = {
+            'timestamp': time_8601(),
+            'values': [d.as_dict() for d in data]
+        }
+
+        # Send to the server
+        r = requests.post(self.service_url + '/validate_data',
+                          headers={'RLToken': self.service_token},
+                          json=input_data)
+
+        r.raise_for_status()
+        if r.status_code == requests.codes.ok:
+            result = r.json()
+            data = [RLPoint.from_dict(feature) for feature in result['values']]
+            return data

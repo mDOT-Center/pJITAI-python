@@ -36,13 +36,15 @@ decision_data = {
             'name': 'feature0',
             'value': 1.234,
             'timestamp': '2022-05-04T11:52:00Z-06:00',
-            'code': 'SUCCESS_DATA_VALIDATED',
+            'status_code': 'SUCCESS',
+            'status_message': 'DATA_VALIDATED',
         },
         {
             'name': 'feature1_heart_rate',
             'value': 100000000,
             'timestamp': '2022-05-03T11:52:00Z-06:00',
-            'code': 'ERROR_DATA_VALUE_TOO_LARGE',
+            'status_code': 'SUCCESS',
+            'status_message': 'DATA_VALIDATED',
         },
         {
             'name': 'feature1_heart_rate',
