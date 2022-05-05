@@ -122,15 +122,14 @@ class reinforcement_learning:
         :param data:
         :return:
         """
-        # Convert to JSON for sending to the server
-        input_data = data.as_dict()
 
         # Send to the server
         r = requests.post(self.service_url + '/validate_data',
                           headers={'RLToken': self.service_token},
-                          json=input_data)
+                          json=data.as_dict())
 
         r.raise_for_status()  # Raise an exception if the request fails for any reason
+
         if r.status_code == requests.codes.ok:
             result = RLFeatureVector.from_dict(r.json())  # Convert back to RLFeatureVector
             for feature in result.values:

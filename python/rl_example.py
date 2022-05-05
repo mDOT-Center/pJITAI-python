@@ -43,16 +43,16 @@ batch_data = {
     ]
 }
 
-possible_codes = [
-    'ERROR_INVALID_DATA_VALUE',
-    'ERROR_DATA_VALUE_TOO_SMALL',
-    'ERROR_DATA_VALUE_TOO_LARGE',
-    'ERROR_INVALID_DATA_TYPE',
-
-    'WARNING_MISSING_DATA',
-
-    'SUCCESS_DATA_VALIDATED',
-]
+# possible_codes = [
+#     'ERROR_INVALID_DATA_VALUE',
+#     'ERROR_DATA_VALUE_TOO_SMALL',
+#     'ERROR_DATA_VALUE_TOO_LARGE',
+#     'ERROR_INVALID_DATA_TYPE',
+#
+#     'WARNING_MISSING_DATA',
+#
+#     'SUCCESS_DATA_VALIDATED',
+# ]
 
 decision_data = {
     'timestamp': '2020-01-01T00:00:00Z-06:00',
