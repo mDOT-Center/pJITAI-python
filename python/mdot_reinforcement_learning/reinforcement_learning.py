@@ -53,7 +53,7 @@ class reinforcement_learning:
         self.service_url = url_builder(server, service_id)
         self.service_token = service_token
 
-        r = requests.post(self.service_url, json={})
+        r = requests.post(self.service_url, headers={'RLToken': self.service_token}, json={},)
         r.raise_for_status()  # Raise an exception if the request fails for any reason
         if r.status_code == requests.codes.ok:
             self.model = r.json()  # Save the RL model returned from the server
@@ -81,7 +81,7 @@ class reinforcement_learning:
         valid = True
         if valid:
             # Send to the server
-            r = requests.post(self.service_url + '/batch_upload', headers={'RLToken': self.service_token},
+            r = requests.post(self.service_url + '/upload', headers={'RLToken': self.service_token},
                               json={"data": data})
             r.raise_for_status()  # Raise an exception if the request fails for any reason
             if r.status_code == requests.codes.ok:
@@ -107,10 +107,10 @@ class reinforcement_learning:
             # Send to the server
             r = requests.post(self.service_url + '/decision',
                               headers={'RLToken': self.service_token},
-                              json={"data": data})
+                              json=data.as_dict())
             r.raise_for_status()
             if r.status_code == requests.codes.ok:
-                result = r.json()
+                result = RLFeatureVector.from_dict(r.json())  # Convert back to RLFeatureVector
                 return result
         else:
             raise Exception("Data is not valid")

@@ -38,20 +38,17 @@ from python.mdot_reinforcement_learning.datatypes import RLPoint, RLFeatureVecto
 
 class TestRLMethods(unittest.TestCase):
 
-    @responses.activate
     def setUp(self):
-        self.server = 'https://localhost:8080/api/v1/rl'
-        self.service_id = '6d93aff2-c619-4695-a5ab-b00ad60759f3'
+        self.server = 'http://localhost:85/api'
+        self.service_id = 'c8b061f6-9638-4af3-8086-1aae24c261f2'
         self.service_token = 'e6e74d36-a3e4-4631-b077-4fdd703636f2'
 
-        responses.add(responses.POST, url_builder(self.server, self.service_id), json={'foo': 'bar'}, status=200)
-        self.session = mrl.reinforcement_learning(
-            self.server, self.service_id, self.service_token)
+        self.session = mrl.reinforcement_learning(self.server, self.service_id, self.service_token)
 
     def test_setup(self):
-        self.assertEqual(self.session.model, {'foo': 'bar'})
+        self.assertEqual(self.session.model['type'], 'ThompsonSampling')
+        self.assertEqual(self.session.model['uuid'], 'c8b061f6-9638-4af3-8086-1aae24c261f2')
 
-    @responses.activate
     def test_batch_upload(self):
         batch_data = {
             'data': [
@@ -62,19 +59,31 @@ class TestRLMethods(unittest.TestCase):
             ]
         }
 
-        responses.add(responses.POST, url_builder(self.server, self.service_id) + '/batch_upload',
-                      json={'batch_upload': 'bar'}, status=200)
-
         batch_upload_result = self.session.batch_upload(batch_data)
         self.assertEqual(batch_upload_result, {'batch_upload': 'bar'})
 
-    @responses.activate
+
+    def test_decision(self):
+        data_input = RLFeatureVector(
+            timestamp=time_8601(),
+            user_id='user_1',
+            values=[RLPoint(
+                value=random.random(),
+                name=f'feature_{i}',
+            ) for i in range(2)],
+        )
+
+        decision_result = self.session.decision(data_input)
+        self.assertEqual(decision_result, {'batch_upload': 'bar'})
+
+
+
+
     def test_data_validation_clean(self):
         validate_data_input = RLFeatureVector(
             timestamp=time_8601(),
             user_id='user_1',
             values=[RLPoint(
-                timestamp=time_8601(),
                 value=random.random(),
                 name=f'feature_{i}',
             ) for i in range(2)],
@@ -83,36 +92,27 @@ class TestRLMethods(unittest.TestCase):
         validate_data_output = RLFeatureVector(
             timestamp=validate_data_input.timestamp,
             user_id=validate_data_input.user_id,
-            values=[RLPoint(name=x.name, value=x.value, timestamp=x.timestamp, status_code='SUCCESS',
-                            status_message='DATA_VALIDATED') for x in validate_data_input.values]
+            values=[RLPoint(name=x.name, value=x.value) for x in validate_data_input.values]
         )
 
         server_response = {
             'timestamp': validate_data_input.timestamp,
             'user_id': validate_data_input.user_id,
+            'status_code': 'SUCCESS',
+            'status_message': 'DATA_VALIDATED',
             'values': [
                 {
                     'name': validate_data_input.values[0].name,
                     'value': validate_data_input.values[0].value,
-                    'timestamp': validate_data_input.values[0].timestamp,
-                    'status_code': 'SUCCESS',
-                    'status_message': 'DATA_VALIDATED',
                 },
                 {
                     'name': validate_data_input.values[1].name,
                     'value': validate_data_input.values[1].value,
-                    'timestamp': validate_data_input.values[1].timestamp,
-                    'status_code': 'SUCCESS',
-                    'status_message': 'DATA_VALIDATED',
                 },
             ]
         }
 
-        responses.add(responses.POST,
-                      url_builder(self.server, self.service_id) + '/validate_data',
-                      json=server_response,
-                      status=200)
-
+        pprint(validate_data_input.as_dict())
         validate_result = self.session.validate_data(validate_data_input)
         self.assertEqual(validate_result, validate_data_output)
 
