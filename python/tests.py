@@ -32,7 +32,7 @@ from mdot_reinforcement_learning.util import url_builder, time_8601
 import responses
 import random
 
-from mdot_reinforcement_learning import reinforcement_learning as mrl
+from python.mdot_reinforcement_learning import reinforcement_learning as mrl
 from python.mdot_reinforcement_learning.datatypes import RLPoint, RLFeatureVector
 
 

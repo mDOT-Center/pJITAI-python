@@ -24,16 +24,13 @@
 #  OF SUCH DAMAGE.
 #
 
-from pprint import pprint
-
 import requests
-from mdot_reinforcement_learning.util import url_builder, validate_parameters
+from python.mdot_reinforcement_learning.util import url_builder
 
 # Main class
 from python.mdot_reinforcement_learning.codes import StatusCode
-from python.mdot_reinforcement_learning.datatypes import RLPoint, RLFeatureVector
+from python.mdot_reinforcement_learning.datatypes import RLFeatureVector
 from python.mdot_reinforcement_learning.exceptions import RLValidationError
-from python.mdot_reinforcement_learning.util import time_8601
 
 
 class reinforcement_learning:
@@ -137,3 +134,7 @@ class reinforcement_learning:
                     # TODO: How to handle multiple simultaneous validation errors?
                     raise RLValidationError(f'{feature.name}: {feature.status_message}')
             return result
+'''
+Add for batch updates
+Add for decisions
+'''
