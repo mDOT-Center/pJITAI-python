@@ -61,7 +61,7 @@ def upload(row: dict):
             ]
         }
         uploadres = session.upload(data)  # Server side and raises exceptions for ERRORS
-        #print(uploadres)
+        # print(uploadres)
     except:  # ValidationError as e:
         # Example: Remove invalid data entries
         pass
@@ -70,7 +70,8 @@ def upload(row: dict):
 # UPDATE
 def update(row: dict):
     try:
-        decision_result = session.update(row)
+        update_result = session.update(row)
+        print(update_result)
     except:  # SessionError as se:
         pass
 
@@ -79,6 +80,7 @@ def update(row: dict):
 def decision(row: dict):
     try:
         decision_result = session.decision(row)
+        print(decision_result)
     except:  # SessionError as se:
         pass
 
@@ -178,7 +180,7 @@ print(f'All events = {len(allevents)}')
 count = 0
 for event in allevents:
     #print(f'event is {event[1]}')
-    #print(event)
+    # print(event)
     if event[1] == 'upload':
         upload(event[2])
     elif event[1] == 'update':
@@ -186,5 +188,5 @@ for event in allevents:
     else:
         decision(event[2])
 
-
-
+    #count += 1
+    #if count == 2: break
