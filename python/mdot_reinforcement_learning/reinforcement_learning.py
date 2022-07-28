@@ -62,6 +62,45 @@ class reinforcement_learning:
             _dict_: Service info.
         """
         pass
+    def get_algorithm_info(self, uuid: str) -> dict:
+        """Get the service info for the RL service.
+
+        Returns:
+            _dict_: Service info.
+        """
+        r = requests.post(self.service_url, headers={'RLToken': self.service_token},
+                          json={"data": {}})
+        r.raise_for_status()  # Raise an exception if the request fails for any reason
+        if r.status_code == requests.codes.ok:
+            result = r.json()
+            print(f'Result is {result}')
+            return result
+        pass
+
+    def upload(self, data: dict) -> dict:
+        """Batch upload data for the RL model.
+
+        Args:
+            data (_dict_): Data to update the RL model.
+
+        Returns:
+            _dict_: Updated RL model.
+        """
+
+        # Validate the data
+        # valid = validate_parameters(self.model, data)
+        valid = True
+        if valid:
+            # Send to the server
+            r = requests.post(self.service_url + '/upload', headers={'RLToken': self.service_token},
+                              json=data)
+            r.raise_for_status()  # Raise an exception if the request fails for any reason
+            if r.status_code == requests.codes.ok:
+                result = r.json()
+                #print(f'upload result {result}')
+                return result
+        else:
+            raise Exception("Data is not valid")
 
     def batch_upload(self, data: dict) -> dict:
         """Batch upload data for the RL model.
@@ -104,7 +143,33 @@ class reinforcement_learning:
             # Send to the server
             r = requests.post(self.service_url + '/decision',
                               headers={'RLToken': self.service_token},
-                              json=data.as_dict())
+                              json=data)
+            r.raise_for_status()
+            if r.status_code == requests.codes.ok:
+                result = RLFeatureVector.from_dict(r.json())  # Convert back to RLFeatureVector
+                return result
+        else:
+            raise Exception("Data is not valid")
+
+
+    def update(self, data: RLFeatureVector) -> RLFeatureVector:
+        """Make a decision based on the RL model.
+
+        Args:
+            data (_dict_): Data to make a decision.
+
+        Returns:
+            _dict_: Decision.
+        """
+
+        # Validate the data
+        # valid = validate_parameters(self.model, data)
+        valid = True
+        if valid:
+            # Send to the server
+            r = requests.post(self.service_url + '/update',
+                              headers={'RLToken': self.service_token},
+                              json=data)
             r.raise_for_status()
             if r.status_code == requests.codes.ok:
                 result = RLFeatureVector.from_dict(r.json())  # Convert back to RLFeatureVector
