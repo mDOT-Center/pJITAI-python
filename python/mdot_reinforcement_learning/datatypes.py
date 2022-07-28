@@ -30,7 +30,7 @@ from typing import Any
 from pprint import pprint
 
 # TODO: What are the other members of this class?
-from python.mdot_reinforcement_learning.util import time_8601
+from .util import time_8601
 
 
 @dataclass(frozen=True)

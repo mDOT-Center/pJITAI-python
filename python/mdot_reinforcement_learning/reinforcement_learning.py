@@ -25,12 +25,12 @@
 #
 
 import requests
-from python.mdot_reinforcement_learning.util import url_builder
+from .util import url_builder
 
 # Main class
-from python.mdot_reinforcement_learning.codes import StatusCode
-from python.mdot_reinforcement_learning.datatypes import RLFeatureVector
-from python.mdot_reinforcement_learning.exceptions import RLValidationError
+from .codes import StatusCode
+from .datatypes import RLFeatureVector
+from .exceptions import RLValidationError
 
 
 class reinforcement_learning:
