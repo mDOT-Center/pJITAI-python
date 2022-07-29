@@ -24,14 +24,19 @@
 #  OF SUCH DAMAGE.
 #
 
+import argparse
 from mdot_reinforcement_learning import reinforcement_learning as mrl
 from datetime import datetime
 
-server = 'http://localhost:85/api/'
-service_id = 'aceb56c4-59f9-4534-b8e7-f04d4ee39861'
-service_token = 'e6e74d36-a3e4-4631-b077-4fdd703636f2'
 
-session = mrl.reinforcement_learning(server, service_id, service_token)
+parser = argparse.ArgumentParser(description='Generate RL test data')
+parser.add_argument('--server', default='http://localhost:85/api')
+parser.add_argument('--service_id', help='UUID')
+
+# TODO: Remove the default once implemented on the server
+parser.add_argument('--service_token', help='UUID',
+                    default='e6e74d36-a3e4-4631-b077-4fdd703636f2')
+args = parser.parse_args()
 
 
 # UPLOAD
@@ -41,26 +46,27 @@ def upload(row: dict):
         data['timestamp'] = row['timestamp']
         data['user_id'] = row['user_id']
         data['values'] = [row]
-        postman_data = {
-            "timestamp": "2022-06-16T13: 41: 51.120903-05: 00",
-            "user_id": "user_1",
-            "values": [
-                {
-                    "timestamp": "2022-06-16T19:05:23.495427-05: 00",
-                    "decision_timestamp": "2022-06-16T19:05:23.495427-05: 00",
-                    "decision": 1,
-                    "proximal_outcome_timestamp": "2022-06-16T19:05:23.495427-05: 00",
-                    "proximal_outcome": 50,
-                    "values": [
-                        {
-                            "name": "step_count",
-                            "value": 500
-                        }
-                    ]
-                }
-            ]
-        }
-        uploadres = session.upload(data)  # Server side and raises exceptions for ERRORS
+        # postman_data = {
+        #     "timestamp": "2022-06-16T13: 41: 51.120903-05: 00",
+        #     "user_id": "user_1",
+        #     "values": [
+        #         {
+        #             "timestamp": "2022-06-16T19:05:23.495427-05: 00",
+        #             "decision_timestamp": "2022-06-16T19:05:23.495427-05: 00",
+        #             "decision": 1,
+        #             "proximal_outcome_timestamp": "2022-06-16T19:05:23.495427-05: 00",
+        #             "proximal_outcome": 50,
+        #             "values": [
+        #                 {
+        #                     "name": "step_count",
+        #                     "value": 500
+        #                 }
+        #             ]
+        #         }
+        #     ]
+        # }
+        # Server side and raises exceptions for ERRORS
+        uploadres = session.upload(data)
         # print(uploadres)
     except:  # ValidationError as e:
         # Example: Remove invalid data entries
@@ -85,7 +91,6 @@ def decision(row: dict):
         pass
 
 
-# decision_result = session.decision(decision_data)
 allevents = []
 
 
@@ -170,23 +175,31 @@ def process_decision():
     f.close()
 
 
-process_upload()
-process_update()
-process_decision()
-allevents.sort(key=lambda x: x[0])
-print(f'All events = {len(allevents)}')
+if __name__ == '__main__':
 
-# simulation
-count = 0
-for event in allevents:
-    #print(f'event is {event[1]}')
-    # print(event)
-    if event[1] == 'upload':
-        upload(event[2])
-    elif event[1] == 'update':
-        update(event[2])
-    else:
-        decision(event[2])
+    server = args.server
+    service_id = args.service_id
+    service_token = args.service_token
 
-    #count += 1
-    #if count == 2: break
+    session = mrl.reinforcement_learning(server, service_id, service_token)
+
+    process_upload()
+    process_update()
+    process_decision()
+    allevents.sort(key=lambda x: x[0])
+    print(f'All events = {len(allevents)}')
+
+    # simulation
+    count = 0
+    for event in allevents:
+        #print(f'event is {event[1]}')
+        # print(event)
+        if event[1] == 'upload':
+            upload(event[2])
+        elif event[1] == 'update':
+            update(event[2])
+        else:
+            decision(event[2])
+
+        #count += 1
+        # if count == 2: break
