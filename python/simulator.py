@@ -28,7 +28,7 @@ from mdot_reinforcement_learning import reinforcement_learning as mrl
 from datetime import datetime
 
 server = 'http://localhost:85/api/'
-service_id = 'aceb56c4-59f9-4534-b8e7-f04d4ee39861'
+service_id = '1b26f00e-81ca-4aba-8c3c-d094ed8bfce2'
 service_token = 'e6e74d36-a3e4-4631-b077-4fdd703636f2'
 
 session = mrl.reinforcement_learning(server, service_id, service_token)
@@ -41,6 +41,7 @@ def upload(row: dict):
         data['timestamp'] = row['timestamp']
         data['user_id'] = row['user_id']
         data['values'] = [row]
+
         postman_data = {
             "timestamp": "2022-06-16T13: 41: 51.120903-05: 00",
             "user_id": "user_1",
@@ -109,7 +110,9 @@ def process_upload():
             values = []
             for idx in range(6, len(data)):
                 val = {}
-                val[columns[idx]] = data[idx]
+                #val[columns[idx]] = data[idx]
+                val['name'] = columns[idx]
+                val['value'] = data[idx]
                 values.append(val)
             row['values'] = values
             event = (timestamp, 'upload', row)
@@ -188,5 +191,5 @@ for event in allevents:
     else:
         decision(event[2])
 
-    #count += 1
-    #if count == 2: break
+    # count += 1
+    # if count == 3: break
