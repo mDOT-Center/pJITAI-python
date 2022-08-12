@@ -34,7 +34,7 @@ from .util import time_8601
 
 
 @dataclass(frozen=True)
-class RLPoint:
+class DataPoint:
     name: str
     value: Any
 
@@ -57,20 +57,31 @@ class RLPoint:
 
 # TODO: What are the other members of this class?
 @dataclass(frozen=True)
-class RLFeatureVector:
-    values: list[RLPoint]
+class DataVector:
+    values: list[DataPoint]
     user_id: str
     timestamp: str = time_8601()
     status_code: str = ""
     status_message: str = ""
+    decision_timestamp: str = ""
+    decision: int = 0
+    proximal_outcome: int = 0
+    proximal_outcome_timestamp: str = ""
 
     def as_dict(self):
         return {
             "timestamp": self.timestamp,
             "user_id": self.user_id,
+            "decision_timestamp": self.decision_timestamp,
+            "decision": self.decision,
+            "proximal_outcome": self.proximal_outcome,
+            "proximal_outcome_timestamp": self.proximal_outcome_timestamp,
             "values": [v.as_dict() for v in self.values],
 
         }
+
+    def add_value(self, data_point: dict):
+        self.values.append(DataPoint.from_dict(data_point))
 
     @classmethod
     def from_dict(cls, input_dict):
@@ -79,13 +90,18 @@ class RLFeatureVector:
         if "status_message" not in input_dict:
             input_dict["status_message"] = ""
 
-        pprint(input_dict)
-        d = RLFeatureVector(
+        # pprint(input_dict)
+        # decision_timestamp,decision,proximal_outcome_timestamp,proximal_outcome
+        d = DataVector(
             timestamp=input_dict["timestamp"],
             user_id=input_dict["user_id"],
-            values=[RLPoint.from_dict(v) for v in input_dict["values"]],
+            values=[DataPoint.from_dict(v) for v in input_dict["values"]],
             status_code=input_dict["status_code"],
             status_message=input_dict["status_message"],
+            decision_timestamp=input_dict['decision_timestamp'],
+            decision=input_dict['decision'],
+            proximal_outcome=input_dict['proximal_outcome'],
+            proximal_outcome_timestamp=input_dict['proximal_outcome_timestamp']
         )
 
         return d

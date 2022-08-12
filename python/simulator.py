@@ -24,47 +24,31 @@
 #  OF SUCH DAMAGE.
 #
 
-from mdot_reinforcement_learning import reinforcement_learning as mrl
+import argparse
+from mdot_rl_interface import interface as mrl
+from mdot_rl_interface import datatypes
 from datetime import datetime
 
 server = 'http://localhost:85/api/'
 service_id = '1b26f00e-81ca-4aba-8c3c-d094ed8bfce2'
 service_token = 'e6e74d36-a3e4-4631-b077-4fdd703636f2'
 
-session = mrl.reinforcement_learning(server, service_id, service_token)
+parser = argparse.ArgumentParser(description='Generate RL test data')
+parser.add_argument('--server', default='http://localhost:85/api')
+parser.add_argument('--service_id', help='UUID')
+
+# TODO: Remove the default once implemented on the server
+parser.add_argument('--service_token', help='UUID',
+                    default='e6e74d36-a3e4-4631-b077-4fdd703636f2')
+args = parser.parse_args()
 
 
 # UPLOAD
 def upload(row: dict):
     try:
-        data = {}
-        data['timestamp'] = row['timestamp']
-        data['user_id'] = row['user_id']
-        data['values'] = [row]
-
-        postman_data = {
-            "timestamp": "2022-06-16T13: 41: 51.120903-05: 00",
-            "user_id": "user_1",
-            "values": [
-                {
-                    "timestamp": "2022-06-16T19:05:23.495427-05: 00",
-                    "decision_timestamp": "2022-06-16T19:05:23.495427-05: 00",
-                    "decision": 1,
-                    "proximal_outcome_timestamp": "2022-06-16T19:05:23.495427-05: 00",
-                    "proximal_outcome": 50,
-                    "values": [
-                        {
-                            "name": "step_count",
-                            "value": 500
-                        }
-                    ]
-                }
-            ]
-        }
-        uploadres = session.upload(data)  # Server side and raises exceptions for ERRORS
-        # print(uploadres)
-    except:  # ValidationError as e:
-        # Example: Remove invalid data entries
+        uploadres = session.upload(row)  # Server side and raises exceptions for ERRORS
+    except Exception as e:
+        print(f'Something bad {e}')
         pass
 
 
@@ -86,7 +70,6 @@ def decision(row: dict):
         pass
 
 
-# decision_result = session.decision(decision_data)
 allevents = []
 
 
@@ -110,13 +93,18 @@ def process_upload():
             values = []
             for idx in range(6, len(data)):
                 val = {}
-                #val[columns[idx]] = data[idx]
+                # val[columns[idx]] = data[idx]
                 val['name'] = columns[idx]
                 val['value'] = data[idx]
-                values.append(val)
+                #valdp = datatypes.DataPoint.from_dict(val)
+                #values.append(val)
             row['values'] = values
-            event = (timestamp, 'upload', row)
+
+            rowdp = datatypes.DataVector.from_dict(row)
+            #print(f'XXXXXX {row} \n {rowdp}')
+            event = (timestamp, 'upload', rowdp)
             allevents.append(event)
+
 
         i += 1
     f.close()
@@ -173,23 +161,42 @@ def process_decision():
     f.close()
 
 
-process_upload()
-process_update()
-process_decision()
-allevents.sort(key=lambda x: x[0])
-print(f'All events = {len(allevents)}')
+if __name__ == '__main__':
 
-# simulation
-count = 0
-for event in allevents:
-    #print(f'event is {event[1]}')
-    # print(event)
-    if event[1] == 'upload':
-        upload(event[2])
-    elif event[1] == 'update':
-        update(event[2])
-    else:
-        decision(event[2])
+    server = args.server
+    service_id = args.service_id
+    algo_id = '92fc2677-8f74-4bf3-8645-7dc64b3ffc60'
+    service_token = args.service_token
 
-    # count += 1
-    # if count == 3: break
+    session = mrl.Interface(server, algo_id, service_token)
+
+    process_upload()
+    # process_update()
+    # process_decision()
+    allevents.sort(key=lambda x: x[0])
+    print(f'All events = {len(allevents)}')
+
+    # simulation
+    count = 0
+    for event in allevents:
+        # print(f'event is {event[1]}')
+        # print(event)
+        if event[1] == 'upload':
+            data = event[2]
+            int1 = {}
+            int1['name'] = 'int1'
+            int1['value'] = 5.0
+            data.add_value(int1)
+            float_feature = {}
+            float_feature['name'] = 'float_feature'
+            float_feature['value'] = 31.14
+            data.add_value(float_feature)
+            print(data)
+            upload(data)
+        elif event[1] == 'update':
+            update(event[2])
+        else:
+            decision(event[2])
+
+        count += 1
+        if count == 1: break

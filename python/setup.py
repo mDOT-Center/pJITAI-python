@@ -1,5 +1,3 @@
-print(f'Invoking __init__.py for {__name__}')
-
 #  Copyright (c) 2022. University of Memphis, mDOT Center
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -25,6 +23,37 @@ print(f'Invoking __init__.py for {__name__}')
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 #  OF SUCH DAMAGE.
 #
+from setuptools import setup, find_packages
 
+# To use a consistent encoding
+from codecs import open
+from os import path
 
-__all__ = ['reinforcement_learning']
+# The directory containing this file
+HERE = path.abspath(path.dirname(__file__))
+
+# Get the long description from the README file
+with open(path.join(HERE, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
+# This call to setup() does all the work
+setup(
+    name="mDOT-RL-interface",
+    version="0.1.0",
+    description="RL interface library",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://mdotcenter.org/",
+    author="MDOT",
+    author_email="example@email.com",
+    license="MIT",
+    classifiers=[
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",  # TODO - confirm
+        "Programming Language :: Python :: 3.9",
+        "Operating System :: OS Independent"
+    ],
+    packages=["mdot_rl_interface"],
+    include_package_data=True,
+    install_requires=["typing", "dataclasses", "requests", "responses"]
+)

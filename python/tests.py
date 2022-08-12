@@ -28,12 +28,12 @@
 import unittest
 from pprint import pprint
 
-from mdot_reinforcement_learning.util import url_builder, time_8601
+from mdot_rl_interface.util import url_builder, time_8601
 import responses
 import random
 
-from python.mdot_reinforcement_learning import reinforcement_learning as mrl
-from python.mdot_reinforcement_learning.datatypes import RLPoint, RLFeatureVector
+from python.mdot_rl_interface import interface as mrl
+from python.mdot_rl_interface.datatypes import DataPoint, DataVector
 
 
 class TestRLMethods(unittest.TestCase):
@@ -64,10 +64,10 @@ class TestRLMethods(unittest.TestCase):
 
 
     def test_decision(self):
-        data_input = RLFeatureVector(
+        data_input = DataVector(
             timestamp=time_8601(),
             user_id='user_1',
-            values=[RLPoint(
+            values=[DataPoint(
                 value=random.random(),
                 name=f'feature_{i}',
             ) for i in range(2)],
@@ -80,19 +80,19 @@ class TestRLMethods(unittest.TestCase):
 
 
     def test_data_validation_clean(self):
-        validate_data_input = RLFeatureVector(
+        validate_data_input = DataVector(
             timestamp=time_8601(),
             user_id='user_1',
-            values=[RLPoint(
+            values=[DataPoint(
                 value=random.random(),
                 name=f'feature_{i}',
             ) for i in range(2)],
         )
 
-        validate_data_output = RLFeatureVector(
+        validate_data_output = DataVector(
             timestamp=validate_data_input.timestamp,
             user_id=validate_data_input.user_id,
-            values=[RLPoint(name=x.name, value=x.value) for x in validate_data_input.values]
+            values=[DataPoint(name=x.name, value=x.value) for x in validate_data_input.values]
         )
 
         server_response = {
