@@ -95,16 +95,15 @@ def process_upload():
                 val = {}
                 # val[columns[idx]] = data[idx]
                 val['name'] = columns[idx]
-                val['value'] = data[idx]
-                #valdp = datatypes.DataPoint.from_dict(val)
-                #values.append(val)
+                val['value'] = int(data[idx])  # TODO FIXME - hack to make the demo work
+                # valdp = datatypes.DataPoint.from_dict(val)
+                values.append(val)
             row['values'] = values
 
             rowdp = datatypes.DataVector.from_dict(row)
-            #print(f'XXXXXX {row} \n {rowdp}')
+            # print(f'XXXXXX {row} \n {rowdp}')
             event = (timestamp, 'upload', rowdp)
             allevents.append(event)
-
 
         i += 1
     f.close()
@@ -165,33 +164,22 @@ if __name__ == '__main__':
 
     server = args.server
     service_id = args.service_id
-    algo_id = '92fc2677-8f74-4bf3-8645-7dc64b3ffc60'
+    algo_id = '54eb4601-001f-4292-a6f8-f2cad8529b4b'
     service_token = args.service_token
 
     session = mrl.Interface(server, algo_id, service_token)
 
     process_upload()
-    # process_update()
-    # process_decision()
+    #process_update()
+    #process_decision()
     allevents.sort(key=lambda x: x[0])
     print(f'All events = {len(allevents)}')
 
     # simulation
     count = 0
     for event in allevents:
-        # print(f'event is {event[1]}')
-        # print(event)
         if event[1] == 'upload':
             data = event[2]
-            int1 = {}
-            int1['name'] = 'int1'
-            int1['value'] = 5.0
-            data.add_value(int1)
-            float_feature = {}
-            float_feature['name'] = 'float_feature'
-            float_feature['value'] = 31.14
-            data.add_value(float_feature)
-            print(data)
             upload(data)
         elif event[1] == 'update':
             update(event[2])
