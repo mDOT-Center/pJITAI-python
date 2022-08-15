@@ -87,15 +87,15 @@ def process_upload():
             row[columns[1]] = data[1]  # timestamp
             timestamp = datetime.fromisoformat(data[1])
             row[columns[2]] = data[2]  # decision_timestamp
-            row[columns[3]] = data[3]  # decision
+            row[columns[3]] = int(data[3])  # decision
             row[columns[4]] = data[4]  # proximal_outcome_timestamp
-            row[columns[5]] = data[5]  # proximal_outcome
+            row[columns[5]] = int(data[5])  # proximal_outcome
             values = []
             for idx in range(6, len(data)):
                 val = {}
                 # val[columns[idx]] = data[idx]
                 val['name'] = columns[idx]
-                val['value'] = int(data[idx])  # TODO FIXME - hack to make the demo work
+                val['value'] = (data[idx])  # TODO FIXME - hack to make the demo work
                 # valdp = datatypes.DataPoint.from_dict(val)
                 values.append(val)
             row['values'] = values
@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
     server = args.server
     service_id = args.service_id
-    algo_id = '54eb4601-001f-4292-a6f8-f2cad8529b4b'
+    algo_id = 'c15e837c-adf1-461c-af11-2b2877cc62bb'
     service_token = args.service_token
 
     session = mrl.Interface(server, algo_id, service_token)

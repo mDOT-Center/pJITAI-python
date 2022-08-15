@@ -61,10 +61,13 @@ class Interface:
         """
         r = requests.post(self.service_url + '/upload', headers={'RLToken': self.service_token},
                           json=data.as_dict())
-        r.raise_for_status()  # Raise an exception if the request fails for any reason
+        #r.raise_for_status()  # Raise an exception if the request fails for any reason
         if r.status_code == requests.codes.ok:
             result = r.json()
+            print(result)
             return result
+        else:
+            raise Exception(f'{r.status_code} {r.json()}')
 
     def update(self) -> dict:
         """
