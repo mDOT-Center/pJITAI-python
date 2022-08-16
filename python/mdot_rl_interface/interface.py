@@ -27,7 +27,7 @@ from typing import Any
 import requests
 
 # Main class
-from .datatypes import DataVector
+from .datatypes import DataVector, RealmResponse
 from .util import url_builder
 
 
@@ -64,7 +64,6 @@ class Interface:
         #r.raise_for_status()  # Raise an exception if the request fails for any reason
         if r.status_code == requests.codes.ok:
             result = r.json()
-            print(result)
             return result
         else:
             raise Exception(f'{r.status_code} {r.json()}')
@@ -79,7 +78,7 @@ class Interface:
                           json={})
         r.raise_for_status()
         if r.status_code == requests.codes.ok:
-            result = DataVector.from_dict(r.json())  # Convert back to RLFeatureVector
+            result = RealmResponse.from_dict(r.json())
             return result
         pass
 
@@ -94,6 +93,6 @@ class Interface:
                           json=features)
         r.raise_for_status()
         if r.status_code == requests.codes.ok:
-            result = DataVector.from_dict(r.json())  # Convert back to RLFeatureVector
+            result = RealmResponse.from_dict(r.json())
             return result
         pass

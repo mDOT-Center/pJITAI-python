@@ -25,6 +25,7 @@
 #
 
 import argparse
+import traceback
 from mdot_rl_interface import interface as mrl
 from mdot_rl_interface import datatypes
 from datetime import datetime
@@ -48,16 +49,19 @@ def upload(row: dict):
     try:
         uploadres = session.upload(row)  # Server side and raises exceptions for ERRORS
     except Exception as e:
-        print(f'Something bad {e}')
+        print(f'Upload Exception: {e}')
+        traceback.print_exc()
         pass
 
 
 # UPDATE
-def update(row: dict):
+def update():
     try:
-        update_result = session.update(row)
+        update_result = session.update()
         print(update_result)
-    except:  # SessionError as se:
+    except Exception as e:
+        print(f'Update Exception: {e}')
+        traceback.print_exc()
         pass
 
 
@@ -66,7 +70,9 @@ def decision(row: dict):
     try:
         decision_result = session.decision(row)
         print(decision_result)
-    except:  # SessionError as se:
+    except Exception as e:
+        print(f'Decision Exception: {e}')
+        traceback.print_exc()
         pass
 
 
@@ -95,7 +101,7 @@ def process_upload():
                 val = {}
                 # val[columns[idx]] = data[idx]
                 val['name'] = columns[idx]
-                val['value'] = (data[idx])  # TODO FIXME - hack to make the demo work
+                val['value'] = int(data[idx])  # TODO FIXME - hack to make the demo work
                 # valdp = datatypes.DataPoint.from_dict(val)
                 values.append(val)
             row['values'] = values
@@ -164,14 +170,13 @@ if __name__ == '__main__':
 
     server = args.server
     service_id = args.service_id
-    algo_id = 'c15e837c-adf1-461c-af11-2b2877cc62bb'
     service_token = args.service_token
 
-    session = mrl.Interface(server, algo_id, service_token)
+    session = mrl.Interface(server, service_id, service_token)
 
     process_upload()
-    #process_update()
-    #process_decision()
+    process_update()
+    process_decision()
     allevents.sort(key=lambda x: x[0])
     print(f'All events = {len(allevents)}')
 
@@ -180,11 +185,12 @@ if __name__ == '__main__':
     for event in allevents:
         if event[1] == 'upload':
             data = event[2]
-            upload(data)
+            # upload(data)
         elif event[1] == 'update':
-            update(event[2])
+            count += 1
+            update()
         else:
-            decision(event[2])
+            #decision(event[2])
+            pass
 
-        count += 1
         if count == 1: break

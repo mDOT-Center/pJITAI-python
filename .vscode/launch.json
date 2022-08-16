@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": [
+                "--service_id", "028fa04c-943d-4ae3-9885-55b4bdf4337e",
+                "--server", "http://localhost:5001/api"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/python",
+            "env": {"PYTHONPATH": "${workspaceFolder}/python/mdot_reinforcement_learning"}
+        }
+    ]
+}

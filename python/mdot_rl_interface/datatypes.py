@@ -29,9 +29,7 @@ from dataclasses import dataclass
 from typing import Any
 from pprint import pprint
 
-# TODO: What are the other members of this class?
 from .util import time_8601
-
 
 @dataclass(frozen=True)
 class DataPoint:
@@ -55,7 +53,45 @@ class DataPoint:
         }
 
 
-# TODO: What are the other members of this class?
+
+@dataclass(frozen=True)
+class RealmResponse:
+    user_id: str
+    timestamp: str = time_8601()
+    status_code: str = ""
+    status_message: str = ""
+    selection: str = None
+    
+    def as_dict(self):
+        result = {
+            "timestamp": self.timestamp,
+            "user_id": self.user_id,
+            "status_code": self.status_code,
+            "status_message": self.status_message
+        }
+        if self.selection is not None:
+            result['selection'] = self.selection
+        
+        return 
+    @classmethod
+    def from_dict(cls, input_dict):
+        if "selection" not in input_dict:
+            input_dict["selection"] = None
+        if "timestamp" not in input_dict: # TODO: is this correct?
+            input_dict["timestamp"] = time_8601()
+        if "user_id" not in input_dict: # TODO: is this correct?
+            input_dict["user_id"] = "all"
+            
+        d = RealmResponse(
+            timestamp=input_dict["timestamp"],
+            user_id=input_dict["user_id"],
+            status_code=input_dict["status_code"],
+            status_message=input_dict["status_message"],
+            selection=input_dict['selection'],
+        )
+
+        return d
+
 @dataclass(frozen=True)
 class DataVector:
     values: list[DataPoint]
