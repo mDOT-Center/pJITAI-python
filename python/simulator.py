@@ -30,10 +30,6 @@ from mdot_rl_interface import interface as mrl
 from mdot_rl_interface import datatypes
 from datetime import datetime
 
-server = 'http://localhost:85/api/'
-service_id = '1b26f00e-81ca-4aba-8c3c-d094ed8bfce2'
-service_token = 'e6e74d36-a3e4-4631-b077-4fdd703636f2'
-
 parser = argparse.ArgumentParser(description='Generate RL test data')
 parser.add_argument('--server', default='http://localhost:85/api')
 parser.add_argument('--service_id', help='UUID')
@@ -47,7 +43,8 @@ args = parser.parse_args()
 # UPLOAD
 def upload(row: dict):
     try:
-        uploadres = session.upload(row)  # Server side and raises exceptions for ERRORS
+        upload_result = session.upload(row)  # Server side and raises exceptions for ERRORS
+        print(upload_result)
     except Exception as e:
         print(f'Upload Exception: {e}')
         traceback.print_exc()
@@ -153,11 +150,13 @@ def process_decision():
             row[columns[1]] = data[1]  # timestamp
             timestamp = datetime.fromisoformat(data[1])
             values = []
-            for x in range(2, len(data)):
+            for idx in range(2, len(data)):
                 val = {}
-                val[columns[x]] = data[x]
+                val['name'] = columns[idx]
+                val['value'] = int(data[idx])
                 values.append(val)
             row['values'] = values
+
 
             event = (timestamp, 'decision', row)
             allevents.append(event)
@@ -185,12 +184,12 @@ if __name__ == '__main__':
     for event in allevents:
         if event[1] == 'upload':
             data = event[2]
-            # upload(data)
+            upload(data)
         elif event[1] == 'update':
             count += 1
             update()
         else:
-            #decision(event[2])
-            pass
+            decision(event[2])
+            
 
         if count == 1: break

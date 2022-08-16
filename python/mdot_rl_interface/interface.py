@@ -27,9 +27,9 @@ from typing import Any
 import requests
 
 # Main class
-from .datatypes import DataVector, RealmResponse
+from .datatypes import DataVector, DecisionResponse, UpdateResponse, UploadResponse
 from .util import url_builder
-
+from requests.exceptions import HTTPError
 
 class Interface:
     service_url = ''
@@ -39,12 +39,19 @@ class Interface:
     def __init__(self, server: str, service_id: str, service_token: str):
         self.service_url = url_builder(server, service_id)
         self.service_token = service_token
-        r = requests.post(self.service_url, headers={'RLToken': self.service_token}, json={}, )
-        r.raise_for_status()  # Raise an exception if the request fails for any reason
-        if r.status_code == requests.codes.ok:
+        try:
+            r = requests.post(self.service_url, headers={'RLToken': self.service_token}, json={}, )
+            r.raise_for_status()
             self.model = r.json()  # Save the RL model returned from the server
+            
+        except HTTPError as exc:
+            code = exc.response.status_code
+            
+            if code in [400]:
+                raise Exception(f'{r.status_code} {r.json()}')
 
-        pass
+            raise Exception(f'{code} {r.json()}')
+
 
     def get_algorithm_info(self) -> dict:
         """
@@ -53,46 +60,69 @@ class Interface:
         """
         return self.model
 
-    def upload(self, data: DataVector) -> dict:
+    def upload(self, data: DataVector) -> UploadResponse:
         """
         Uploads a single data vector row to the configured algorithm
         :param data: The DataVector object to be uploaded
         :return: Status of the operation
         """
-        r = requests.post(self.service_url + '/upload', headers={'RLToken': self.service_token},
-                          json=data.as_dict())
-        #r.raise_for_status()  # Raise an exception if the request fails for any reason
-        if r.status_code == requests.codes.ok:
-            result = r.json()
+        try:
+            r = requests.post(self.service_url + '/upload', headers={'RLToken': self.service_token},
+                            json=data.as_dict())
+            r.raise_for_status()  # Raise an exception if the request fails for any reason
+            
+            result = UploadResponse.from_dict(r.json())
             return result
-        else:
-            raise Exception(f'{r.status_code} {r.json()}')
+            
+        except HTTPError as exc:
+            code = exc.response.status_code
+            
+            if code in [400]:
+                raise Exception(f'{r.status_code} {r.json()}')
 
-    def update(self) -> dict:
+            raise Exception(f'{code} {r.json()}')
+            
+            
+
+    def update(self) -> UpdateResponse:
         """
         Requests the service to update
         :return: Status of the operation
         """
-        r = requests.post(self.service_url + '/update',
-                          headers={'RLToken': self.service_token},
-                          json={})
-        r.raise_for_status()
-        if r.status_code == requests.codes.ok:
-            result = RealmResponse.from_dict(r.json())
+        try:
+            r = requests.post(self.service_url + '/update',
+                            headers={'RLToken': self.service_token},
+                            json={})
+            r.raise_for_status()
+            result = UpdateResponse.from_dict(r.json())
             return result
-        pass
+            
+        except HTTPError as exc:
+            code = exc.response.status_code
+            
+            if code in [400]:
+                raise Exception(f'{r.status_code} {r.json()}')
 
-    def decision(self, features: DataVector) -> dict:
+            raise Exception(f'{code} {r.json()}')
+
+    def decision(self, features: DataVector) -> DecisionResponse:
         """
         Request the service for a decision action
         :param features:
         :return: Status of the operation
         """
-        r = requests.post(self.service_url + '/decision',
-                          headers={'RLToken': self.service_token},
-                          json=features)
-        r.raise_for_status()
-        if r.status_code == requests.codes.ok:
-            result = RealmResponse.from_dict(r.json())
+        try:
+            r = requests.post(self.service_url + '/decision',
+                            headers={'RLToken': self.service_token},
+                            json=features)
+            r.raise_for_status()
+            result = DecisionResponse.from_dict(r.json())
             return result
-        pass
+            
+        except HTTPError as exc:
+            code = exc.response.status_code
+            
+            if code in [400]:
+                raise Exception(f'{r.status_code} {r.json()}')
+
+            raise Exception(f'{code} {r.json()}')
