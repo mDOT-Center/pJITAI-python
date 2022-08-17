@@ -1,0 +1,11 @@
+typing
+dataclasses
+requests
+responses
+
+[dev]
+black
+bumpver
+isort
+pip-tools
+pytest
