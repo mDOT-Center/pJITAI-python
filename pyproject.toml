@@ -24,7 +24,7 @@ dependencies = [
 requires-python = ">=3.10"
 
 [project.optional-dependencies]
-dev = ["black", "bumpver", "isort", "pip-tools", "pytest"]
+dev = ["bumpver", "isort", "pip-tools"]
 
 [project.urls]
 Homepage = "https://github.com/mDOT-Center/pJITAI"

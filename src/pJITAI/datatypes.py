@@ -31,18 +31,25 @@ from .util import time_8601
 
 @dataclass(frozen=True)
 class _CoreDefaultBase:
+    """Base class for adding user_id and timestamps to the other data classes.
+    """    
     user_id: str = ""
     timestamp: str = time_8601()
 
 
 @dataclass(frozen=True)
 class _StatusBase:
+    """Base class for adding status_code and status_message to the other data classes.
+    Primarly used for return codes from API codes.
+    """
     status_code: str = ""
     status_message: str = ""
 
 
 @dataclass(frozen=True)
 class DataPoint:
+    """Primary data point object that includes options for name, value, and annotations.
+    """    
     name: str
     value: Any
 
@@ -65,6 +72,8 @@ class DataPoint:
 
 @dataclass(frozen=True)
 class UploadResponse(_StatusBase):
+    """Response object for calls to the upload API route.
+    """
     def as_dict(self):
         result = {
             "status_code": self.status_code,
@@ -84,6 +93,8 @@ class UploadResponse(_StatusBase):
 
 @dataclass(frozen=True)
 class UpdateResponse(_StatusBase):
+    """Response object for calls to the update API route.
+    """
     def as_dict(self):
         result = {
             "status_code": self.status_code,
@@ -103,6 +114,8 @@ class UpdateResponse(_StatusBase):
 
 @dataclass(frozen=True)
 class DecisionResponse(_CoreDefaultBase, _StatusBase):
+    """Response object for calls to the decision API route.
+    """
     selection: str = None
 
     def as_dict(self):
@@ -131,6 +144,8 @@ class DecisionResponse(_CoreDefaultBase, _StatusBase):
 
 @dataclass(frozen=True)
 class DataVector(_CoreDefaultBase, _StatusBase):
+    """Primary data vector for the pJITAI service.
+    """
     decision_timestamp: str = ""
     decision: int = 0
     proximal_outcome: int = 0

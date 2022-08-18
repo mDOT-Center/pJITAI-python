@@ -26,11 +26,27 @@
 import datetime
 
 
-def url_builder(server, service_id) -> str:
-    # Build the URL for the API call
+def url_builder(server: str, service_id: str) -> str:
+    """Helper method for constructing the pJITAI url
+
+    Args:
+        server (str): URL for the pJITAI api server (e.g. https://pJITAI.md2k.org/api)
+        service_id (str): UUID designation for the specific pJITAI algorthm
+
+    Returns:
+        str: Properly formatted URL suitable for the library to interact with the REST APIs
+    """    
     url = server + "/" + service_id
     return url
 
 
-def time_8601(time=datetime.datetime.now()) -> str:
+def time_8601(time: datetime = datetime.datetime.now()) -> str:
+    """A helper time formatter based on the ISO8601 time standard.
+
+    Args:
+        time (datetime, optional): Defaults to datetime.datetime.now().
+
+    Returns:
+        str: String representation in ISO8601 format
+    """    
     return time.astimezone().isoformat()

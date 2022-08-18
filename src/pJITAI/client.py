@@ -22,27 +22,45 @@
 #  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 #  OF SUCH DAMAGE.
-#
+
 from typing import Any
 import requests
 
-# Main class
 from .datatypes import DataVector, DecisionResponse, UpdateResponse, UploadResponse
 from .util import url_builder
 from requests.exceptions import HTTPError
 
 
 class Client:
+    """Primary pJITAI client.
+    
+    Implements:
+    - Upload
+    - Update
+    - Decision
+    
+    """
     service_url = ''
     service_token = ''
     model: dict[Any, Any] = {}
 
     def __init__(self, server: str, service_id: str, service_token: str):
+        """Initialization method for the client
+
+        Args:
+            server (str): URL for the path to the server api (e.g. https://pJITAI.md2k.org/api)
+            service_id (str): UUID designation for the specific algorithm instance
+            service_token (str): UUID security token for the algorithm instance
+
+        Raises:
+            Exception: General purpose exception with a description of any error.
+        """
         self.service_url = url_builder(server, service_id)
         self.service_token = service_token
         try:
             r = requests.post(self.service_url, headers={
-                              'pJITAI_token': self.service_token}, json={}, )
+                              'pJITAI_token': self.service_token},
+                              json={})
             r.raise_for_status()
             self.model = r.json()  # Save the pJITAI model returned from the server
 
@@ -55,9 +73,25 @@ class Client:
             raise Exception(f'{code} {r.json()}')
 
     def get_algorithm_info(self) -> dict:
+        """Algorithm instance details from the server.
+
+        Returns:
+            dict: A diction containing all the details of the algorithm defination
+        """
         return self.model
 
     def upload(self, data: DataVector) -> UploadResponse:
+        """Upload data for storage in the pJITAI server.
+
+        Args:
+            data (DataVector): A DataVector containing all the necessary information for a single uploaded point.  This is currently limited to a single entry per upload.
+
+        Raises:
+            Exception: General purpose exception with a description of any error.
+
+        Returns:
+            UploadResponse: Response details from the server
+        """
         try:
             r = requests.post(self.service_url + '/upload',
                               headers={'pJITAI_token': self.service_token},
@@ -76,6 +110,17 @@ class Client:
             raise Exception(f'{code} {r.json()}')
 
     def update(self) -> UpdateResponse:
+        """Initiate this algorithm's update operation on the server.
+        
+        This is an asynchronous operation and will return once it launches.
+        There is currently no mechanism to check for the completion of this operation.
+
+        Raises:
+            Exception: General purpose exception with a description of any error.
+
+        Returns:
+            UpdateResponse: Response details from the server.
+        """
         try:
             r = requests.post(self.service_url + '/update',
                               headers={'pJITAI_token': self.service_token},
@@ -92,11 +137,22 @@ class Client:
 
             raise Exception(f'{code} {r.json()}')
 
-    def decision(self, features: DataVector) -> DecisionResponse:
+    def decision(self, covariates: DataVector) -> DecisionResponse:
+        """_summary_
+
+        Args:
+            features (DataVector): A DataVector representing all the covariates defined by the algorithm instance.
+
+        Raises:
+            Exception: General purpose exception with a description of any error.
+
+        Returns:
+            DecisionResponse: Response details from the server
+        """
         try:
             r = requests.post(self.service_url + '/decision',
                               headers={'pJITAI_token': self.service_token},
-                              json=features)
+                              json=covariates)
             r.raise_for_status()
             result = DecisionResponse.from_dict(r.json())
             return result
