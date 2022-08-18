@@ -1,2 +1,1 @@
-# mDOT Reinforcement Learning Cloud Service and Associated Interface Libraries
-=
+# mDOT pJITAI (Just-In-Time Adaptive Intervention) interface library
