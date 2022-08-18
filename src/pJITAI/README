@@ -1,0 +1,21 @@
+How to develop this library within your own environment.
+This will install the package in a way that you can make changes
+to the code and not have to reinstall it.
+
+> pip3 build -e .
+
+
+How to publish this library
+
+> pip3 instal build twine bumpver
+
+bumpver is how you can update all the build numbers within the project.
+It supports the MAJOR.MINOR.PATCH format this project utilizes.
+
+> bumpver update -p
+
+To build a project for release on PyPI
+
+> python3 -m build
+> twine check dist/*
+> twine upload dist/*
