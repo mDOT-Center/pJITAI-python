@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mDOT-pJITAI"
+name = "pJITAI"
 version = "1.0.1"
 description = "The mHealth Center for Discovery, Optimization & Translation of Temporally-Precise Intervention tookbox for personalized Just-In-Time Adaptive Interventions"
 readme = "README.md"
@@ -27,7 +27,7 @@ requires-python = ">=3.10"
 dev = ["bumpver", "isort", "pip-tools"]
 
 [project.urls]
-Homepage = "https://github.com/mDOT-Center/pJITAI"
+Homepage = "https://github.com/mDOT-Center/pJITAI-python"
 
 [tool.bumpver]
 current_version = "1.0.1"
