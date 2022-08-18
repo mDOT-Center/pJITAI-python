@@ -6,9 +6,6 @@
 
 import pJITAI
 
-# Open a session to an existing API service
-session = pJITAI.createSession()
-
 # Create a new session to an existing API service
 session = pJITAI.Client(server='http://localhost/api', service_id='028fa04c-943d-4ae3-9885-55b4bdf4337e',
 service_token='e6e74d36-a3e4-4631-b077-4fdd703636f2')
