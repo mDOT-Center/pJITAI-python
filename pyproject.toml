@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pJITAI"
-version = "1.0.1"
+version = "1.0.2"
 description = "The mHealth Center for Discovery, Optimization & Translation of Temporally-Precise Intervention tookbox for personalized Just-In-Time Adaptive Interventions"
 readme = "README.md"
 authors = [{ name = "mDOT Center", email = "dev@md2k.org"}]
@@ -30,7 +30,7 @@ dev = ["bumpver", "isort", "pip-tools"]
 Homepage = "https://github.com/mDOT-Center/pJITAI-python"
 
 [tool.bumpver]
-current_version = "1.0.1"
+current_version = "1.0.2"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "Bump version {old_version} -> {new_version}"
 commit = true
