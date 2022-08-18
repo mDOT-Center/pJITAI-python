@@ -151,8 +151,8 @@ def process_decision():
                 values.append(val)
             row['values'] = values
 
-
-            event = (timestamp, 'decision', row) #TODO: This event should be an object?
+            rowdp = pJITAI.DecisionVector.from_dict(row)
+            event = (timestamp, 'decision', rowdp)
             allevents.append(event)
 
         i += 1

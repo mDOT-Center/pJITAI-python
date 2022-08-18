@@ -189,3 +189,39 @@ class DataVector(_CoreDefaultBase, _StatusBase):
         )
 
         return d
+
+@dataclass(frozen=True)
+class DecisionVector(_CoreDefaultBase, _StatusBase):
+    """Primary decision vector for the pJITAI service.
+    """
+    values: list[DataPoint] = None
+
+    def as_dict(self):
+        return {
+            "timestamp": self.timestamp,
+            "user_id": self.user_id,
+            "values": [v.as_dict() for v in self.values],
+
+        }
+
+    def add_value(self, data_point: dict):
+        if self.values is None:
+            self.values = []
+        self.values.append(DataPoint.from_dict(data_point))
+
+    @classmethod
+    def from_dict(cls, input_dict):
+        if "status_code" not in input_dict:
+            input_dict["status_code"] = ""
+        if "status_message" not in input_dict:
+            input_dict["status_message"] = ""
+
+        d = DecisionVector(
+            timestamp=input_dict["timestamp"],
+            user_id=input_dict["user_id"],
+            values=[DataPoint.from_dict(v) for v in input_dict["values"]],
+            status_code=input_dict["status_code"],
+            status_message=input_dict["status_message"],
+        )
+
+        return d

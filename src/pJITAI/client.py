@@ -138,7 +138,7 @@ class Client:
             raise Exception(f'{code} {r.json()}')
 
     def decision(self, covariates: DataVector) -> DecisionResponse:
-        """_summary_
+        """Initiate this algorithm's decision operation on the server.
 
         Args:
             features (DataVector): A DataVector representing all the covariates defined by the algorithm instance.
@@ -152,7 +152,7 @@ class Client:
         try:
             r = requests.post(self.service_url + '/decision',
                               headers={'pJITAI_token': self.service_token},
-                              json=covariates)
+                              json=covariates.as_dict())
             r.raise_for_status()
             result = DecisionResponse.from_dict(r.json())
             return result
