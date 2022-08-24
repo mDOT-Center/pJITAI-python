@@ -178,12 +178,12 @@ if __name__ == '__main__':
     for event in allevents:
         if event[1] == 'upload':
             data = event[2]
-            #upload(data)
+            upload(data)
         elif event[1] == 'update':
             count += 1
             update()
         else:
-            #decision(event[2])
+            decision(event[2])
             pass
             
 
