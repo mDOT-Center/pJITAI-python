@@ -24,7 +24,7 @@
 #  OF SUCH DAMAGE.
 
 # Version of the pJITAI package
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 
 from .client import Client
 from .datatypes import *
