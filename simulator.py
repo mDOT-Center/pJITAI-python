@@ -28,6 +28,8 @@ import traceback
 import pJITAI
 from datetime import datetime
 
+from pJITAI.datatypes import DataVector
+
 parser = argparse.ArgumentParser(description='Generate RL test data')
 parser.add_argument('--server', default='http://localhost:85/api')
 parser.add_argument('--service_id', help='UUID')
@@ -37,11 +39,16 @@ parser.add_argument('--service_token', help='UUID',
                     default='e6e74d36-a3e4-4631-b077-4fdd703636f2')
 args = parser.parse_args()
 
+decision_responses = {}
 
 # UPLOAD
-def upload(row: dict):
+def upload(row: DataVector):
     try:
-        upload_result = session.upload(row)  # Server side and raises exceptions for ERRORS
+        temp = row.as_dict()
+        temp['decision_id'] = decision_responses[row.user_id]
+        temp['status_message'] = row.status_message
+        temp['status_code'] = row.status_code
+        upload_result = session.upload(DataVector.from_dict(temp))  # Server side and raises exceptions for ERRORS
         print(upload_result)
     except Exception as e:
         print(f'Upload Exception: {e}')
@@ -64,6 +71,7 @@ def update():
 def decision(row: dict):
     try:
         decision_result = session.decision(row)
+        decision_responses[decision_result.user_id] = decision_result.decision_id
         print(decision_result)
     except Exception as e:
         print(f'Decision Exception: {e}')
@@ -95,10 +103,12 @@ def process_upload():
             for idx in range(6, len(data)):
                 val = {}
                 val['name'] = columns[idx]
-                val['value'] = int(data[idx])  # TODO FIXME - hack to make the demo work
+                val['value'] = float(data[idx])  # TODO FIXME - hack to make the demo work
                 values.append(val)
             row['values'] = values
-
+            row['decision_id'] = ""
+            row.pop('decision')
+            row.pop('decision_timestamp')
             rowdp = pJITAI.DataVector.from_dict(row)
             event = (timestamp, 'upload', rowdp)
             allevents.append(event)
@@ -147,10 +157,9 @@ def process_decision():
             for idx in range(2, len(data)):
                 val = {}
                 val['name'] = columns[idx]
-                val['value'] = int(data[idx])
+                val['value'] = float(data[idx])
                 values.append(val)
             row['values'] = values
-
             rowdp = pJITAI.DecisionVector.from_dict(row)
             event = (timestamp, 'decision', rowdp)
             allevents.append(event)

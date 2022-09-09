@@ -4,19 +4,22 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+
         {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
-                "--service_id", "028fa04c-943d-4ae3-9885-55b4bdf4337e",
+                "--service_id", "583b1d40-28f9-4aef-bb64-803591a85a0e",
+                "--service_token", "3c4bc5a0-1811-4cf6-ad53-79a01cb5343c",
                 "--server", "http://localhost:5001/api"
             ],
             "console": "integratedTerminal",
             "justMyCode": true,
-            "cwd": "${workspaceFolder}/python",
-            "env": {"PYTHONPATH": "${workspaceFolder}/python/mdot_reinforcement_learning"}
+            "cwd": "${workspaceFolder}/",
+            "env": {"PYTHONPATH": "${workspaceFolder}/src/pJITAI"}
         }
     ]
 }

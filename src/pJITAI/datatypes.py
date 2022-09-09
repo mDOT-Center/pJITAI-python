@@ -116,7 +116,9 @@ class UpdateResponse(_StatusBase):
 class DecisionResponse(_CoreDefaultBase, _StatusBase):
     """Response object for calls to the decision API route.
     """
-    selection: str = None
+    decision: str = None
+    decision_id: str = None
+    decision_options: list = None
 
     def as_dict(self):
         result = {
@@ -124,7 +126,9 @@ class DecisionResponse(_CoreDefaultBase, _StatusBase):
             "user_id": self.user_id,
             "status_code": self.status_code,
             "status_message": self.status_message,
-            "selection": self.selection
+            "decision": self.decision,
+            "decision_id": self.decision_id,
+            "decision_options": self.decision_options,
         }
 
         return
@@ -134,9 +138,11 @@ class DecisionResponse(_CoreDefaultBase, _StatusBase):
         d = DecisionResponse(
             timestamp=input_dict["timestamp"],
             user_id=input_dict["user_id"],
+            decision_id=input_dict["decision_id"],
+            decision=input_dict['decision'],
+            decision_options=input_dict["decision_options"],
             status_code=input_dict["status_code"],
             status_message=input_dict["status_message"],
-            selection=input_dict['selection'],
         )
 
         return d
@@ -146,8 +152,7 @@ class DecisionResponse(_CoreDefaultBase, _StatusBase):
 class DataVector(_CoreDefaultBase, _StatusBase):
     """Primary data vector for the pJITAI service.
     """
-    decision_timestamp: str = ""
-    decision: int = 0
+    decision_id: str = ""
     proximal_outcome: int = 0
     proximal_outcome_timestamp: str = ""
     values: list[DataPoint] = None
@@ -156,8 +161,7 @@ class DataVector(_CoreDefaultBase, _StatusBase):
         return {
             "timestamp": self.timestamp,
             "user_id": self.user_id,
-            "decision_timestamp": self.decision_timestamp,
-            "decision": self.decision,
+            "decision_id": self.decision_id,
             "proximal_outcome": self.proximal_outcome,
             "proximal_outcome_timestamp": self.proximal_outcome_timestamp,
             "values": [v.as_dict() for v in self.values],
@@ -182,8 +186,7 @@ class DataVector(_CoreDefaultBase, _StatusBase):
             values=[DataPoint.from_dict(v) for v in input_dict["values"]],
             status_code=input_dict["status_code"],
             status_message=input_dict["status_message"],
-            decision_timestamp=input_dict['decision_timestamp'],
-            decision=input_dict['decision'],
+            decision_id=input_dict['decision_id'],
             proximal_outcome=input_dict['proximal_outcome'],
             proximal_outcome_timestamp=input_dict['proximal_outcome_timestamp']
         )
