@@ -6,15 +6,16 @@
     "configurations": [
 
 
+
         {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "args": [
-                "--service_id", "583b1d40-28f9-4aef-bb64-803591a85a0e",
-                "--service_token", "3c4bc5a0-1811-4cf6-ad53-79a01cb5343c",
-                "--server", "http://localhost:5001/api"
+                "--service_id", "31e91d2d-e61f-4641-930a-aad23eb04605",
+                "--service_token", "7b6cfc53-4b04-4301-931f-89003ec2a56b",
+                "--server", "http://192.168.0.2:5001/api"
             ],
             "console": "integratedTerminal",
             "justMyCode": true,
