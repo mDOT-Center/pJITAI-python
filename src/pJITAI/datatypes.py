@@ -116,7 +116,7 @@ class UpdateResponse(_StatusBase):
 class DecisionResponse(_CoreDefaultBase, _StatusBase):
     """Response object for calls to the decision API route.
     """
-    decision: str = None
+    decision: int = None
     decision_id: str = None
     decision_options: list = None
 
