@@ -23,9 +23,18 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 #  OF SUCH DAMAGE.
 
-# Version of the pJITAI package
-__version__ = "1.1.0"
+from enum import Enum
 
-from .client import Client
-from .datatypes import *
-from .codes import *
+
+class StatusCode(Enum):
+    ERROR = "ERROR"
+    WARNING = "WARNING"
+    SUCCESS = "SUCCESS"
+
+    PASS = "PASS"
+
+    ERROR_ARRAY_OUT_OF_RANGE = "ERROR_ARRAY_OUT_OF_RANGE"
+
+    WARNING_OUT_OF_BOUNDS = 'WARNING_OUT_OF_BOUNDS'
+    WARNING_INCORRECT_TYPE = 'WARNING_INCORRECT_TYPE'
+    WARNING_MISSING_VALUE = 'WARNING_MISSING_VALUE'
