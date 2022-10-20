@@ -48,7 +48,7 @@ def upload(row: DataVector):
         temp['decision_id'] = decision_responses[row.user_id]
         temp['status_message'] = row.status_message
         temp['status_code'] = row.status_code
-        upload_result = session.upload(DataVector.from_dict(temp), session.model['configuration']['eligibility'])  # Server side and raises exceptions for ERRORS
+        upload_result = session.upload(DataVector.from_dict(temp), session.model['configuration']['eligibility']) # TODO: Eligibility need to be retrieved and/or modified by the user.
         print(upload_result)
     except Exception as e:
         print(f'Upload Exception: {e}')
@@ -70,7 +70,7 @@ def update():
 # DECISION
 def decision(row: dict):
     try:
-        decision_result = session.decision(row, session.model['configuration']['eligibility'])
+        decision_result = session.decision(row, session.model['configuration']['eligibility']) # TODO: Eligibility need to be retrieved and/or modified by the user.
         decision_responses[decision_result.user_id] = decision_result.decision_id
         print(decision_result)
     except Exception as e:
