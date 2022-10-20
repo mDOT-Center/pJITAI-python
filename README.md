@@ -52,3 +52,17 @@ try:
 except Exception as e:
     print(f'Upload Exception: {e}')
 ```
+
+
+## Build and release
+
+```bash
+
+bumpver update -p
+
+python3 -m build
+
+twine check dist/*
+twine upload dist/*
+
+```
