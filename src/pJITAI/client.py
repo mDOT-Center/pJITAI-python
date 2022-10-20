@@ -80,7 +80,7 @@ class Client:
         """
         return self.model
 
-    def upload(self, data: DataVector) -> UploadResponse:
+    def upload(self, data: DataVector, eligibility: dict) -> UploadResponse:
         """Upload data for storage in the pJITAI server.
 
         Args:
@@ -137,7 +137,7 @@ class Client:
 
             raise Exception(f'{code} {r.json()}')
 
-    def decision(self, covariates: DataVector) -> DecisionResponse:
+    def decision(self, covariates: DataVector, eligibility: dict) -> DecisionResponse:
         """Initiate this algorithm's decision operation on the server.
 
         Args:

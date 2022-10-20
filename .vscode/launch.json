@@ -13,9 +13,9 @@
             "request": "launch",
             "program": "${file}",
             "args": [
-                "--service_id", "31e91d2d-e61f-4641-930a-aad23eb04605",
-                "--service_token", "7b6cfc53-4b04-4301-931f-89003ec2a56b",
-                "--server", "http://192.168.0.2:5001/api"
+                "--service_id", "bc6f7848-73f7-470d-ad5e-49a47d8a80d5",
+                "--service_token", "a527325f-bf6f-489b-9cd1-d5d1c077f17b",
+                "--server", "http://127.0.0.1:5001/api"
             ],
             "console": "integratedTerminal",
             "justMyCode": true,
